@@ -1,0 +1,7 @@
+yfinance 
+pandas 
+
+
+echo yfinance > requirements.txt
+echo pandas >> requirements.txt
+cd ..
