@@ -15,6 +15,17 @@ import pandas as pd
 import os
 from datetime import datetime
 
+def validate_stock_data(df):
+    """Basic sanity checks before processing stock data."""
+    required_cols = {"symbol", "close", "volume", "date"}
+    missing = required_cols - set(df.columns)
+    if missing:
+        raise ValueError(f"Missing required columns: {missing}")
+    if df.empty:
+        raise ValueError("Received empty dataframe")
+    return True
+
+
 
 RAW_DATA_DIR = "data/raw"
 PROCESSED_DATA_DIR = "data/processed"
