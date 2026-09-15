@@ -20,6 +20,7 @@ import pandas as pd
 import os
 import glob
 
+from db import save_trend_scores
 
 PROCESSED_DATA_DIR = "data/processed"
 ANALYSIS_OUTPUT_DIR = "data/analysis"
@@ -123,6 +124,9 @@ def analyze_all(processed_dir: str = PROCESSED_DATA_DIR) -> pd.DataFrame:
     result_df = pd.DataFrame(results)
     if not result_df.empty:
         result_df = result_df.sort_values("demand_score", ascending=False).reset_index(drop=True)
+
+        db_rows = save_trend_scores(result_df)
+        print(f"[MarketIq] Persisted {db_rows} scores -> TimescaleDB")
 
     return result_df
 
