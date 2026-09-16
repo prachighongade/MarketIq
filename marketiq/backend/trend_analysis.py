@@ -20,7 +20,7 @@ import pandas as pd
 import os
 import glob
 
-from db import save_trend_scores
+# from db import save_trend_scores   # TODO: re-enable once db.py exists
 
 PROCESSED_DATA_DIR = "data/processed"
 ANALYSIS_OUTPUT_DIR = "data/analysis"
@@ -55,16 +55,16 @@ def compute_pct_change(df: pd.DataFrame) -> float:
 
 def compute_momentum_score(df: pd.DataFrame) -> float:
     """Compares short-term average daily change to long-term average daily change.
-    Positive = accelerating upward, negative = losing steam or falling."""
+    Positive = accelerating upward, negative = losing steam or falling.
+    Expressed as a percentage-point spread, not a ratio, so it doesn't blow up
+    when the long-term average is near zero."""
     close_col = COLUMN_MAP["close"]
     daily_change = df[close_col].pct_change().fillna(0)
 
     short_avg = daily_change.tail(SHORT_WINDOW).mean()
     long_avg = daily_change.tail(LONG_WINDOW).mean()
 
-    if long_avg == 0:
-        return 0.0
-    return round(((short_avg - long_avg) / abs(long_avg)) * 100, 2)
+    return round((short_avg - long_avg) * 100, 2)
 
 
 def compute_volume_spike(df: pd.DataFrame) -> float:
@@ -125,8 +125,8 @@ def analyze_all(processed_dir: str = PROCESSED_DATA_DIR) -> pd.DataFrame:
     if not result_df.empty:
         result_df = result_df.sort_values("demand_score", ascending=False).reset_index(drop=True)
 
-        db_rows = save_trend_scores(result_df)
-        print(f"[MarketIq] Persisted {db_rows} scores -> TimescaleDB")
+        # db_rows = save_trend_scores(result_df)
+        # print(f"[MarketIq] Persisted {db_rows} scores -> TimescaleDB")
 
     return result_df
 
