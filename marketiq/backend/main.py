@@ -4,11 +4,11 @@ MarketIq - API Layer
 Exposes the existing pipeline (data_processor.py -> trend_analysis.py)
 as HTTP endpoints so the frontend / scheduler / anything else can call it.
 """
- 
+from db import get_latest_demand_rankings 
 from fastapi import FastAPI, HTTPException
 import os
 import glob
- 
+
 from data_processor import process_stock_file, PROCESSED_DATA_DIR
 from trend_analysis import analyze_stock, analyze_all, save_analysis
  
@@ -68,4 +68,12 @@ def get_ranking():
         )
     save_analysis(ranking_df)
     return ranking_df.to_dict(orient="records")
+
+@app.get("/rankings")
+def get_rankings(limit: int = 10):
+    try:
+        rankings = get_latest_demand_rankings(limit=limit)  # query from db.py
+        return {"rankings": rankings}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
  
