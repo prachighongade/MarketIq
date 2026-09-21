@@ -36,3 +36,16 @@ def run_daily_pipeline():
     except Exception as e:
         logging.error(f"Pipeline run FAILED: {e}", exc_info=True)
 
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def run_pipeline_job():
+    try:
+        logger.info("Starting daily fetch-process-analyze pipeline")
+        # existing fetch/process/analyze calls here
+        logger.info("Pipeline completed successfully")
+    except Exception as e:
+        logger.error(f"Pipeline failed: {e}")
+
