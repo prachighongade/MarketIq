@@ -8,4 +8,4 @@ apscheduler
 psycopg2-binary==2.9.13
 python-dotenv==1.2.2
 SQLAlchemy==2.0.46
-"apscheduler" 
+apscheduler
