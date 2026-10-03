@@ -13,6 +13,10 @@ from data_processor import process_stock_file, PROCESSED_DATA_DIR
 from trend_analysis import analyze_stock, analyze_all, save_analysis
  
 app = FastAPI(title="MarketIq API")
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
  
  
 @app.get("/")
@@ -76,4 +80,8 @@ def get_rankings(limit: int = 10):
         return {"rankings": rankings}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
  
